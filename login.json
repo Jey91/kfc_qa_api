@@ -1,0 +1,82 @@
+{
+    "status_code": 200,
+    "message": "Login successful",
+    "data": {
+        "db_code": "174494018633fd5f30fa46d5eb61",
+        "name": "Bryan Kam",
+        "username": "bryankam",
+        "access_token": "514ab068bd885922a7c62c4c3553ea91381d18ad7d14a3fb67",
+        "user_access": [
+            {
+                "name": "product",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "machine",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "downtime_reason",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "tumbling_maintenance",
+                "read": false,
+                "write": false
+            },
+            {
+                "name": "plant",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "bot",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "user_groups",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "user",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "notification_center",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "system_log",
+                "read": true,
+                "write": true
+            },
+            {
+                "name": "travel_card",
+                "read": true,
+                "write": true
+            }
+        ],
+        "plant_access": [
+            {
+                "plant_db_code": "1742949657c09e497855d651efa1",
+                "plant_code": "KL",
+                "plant_name": "KL Plant",
+                "plant_prefix": "kl"
+            },
+            {
+                "plant_db_code": "174371450963647f3cc58f7e3c94",
+                "plant_code": "JH",
+                "plant_name": "Johor Plant",
+                "plant_prefix": "jh"
+            }
+        ],
+        "user_department": "all"
+    }
+}

@@ -1,0 +1,48 @@
+services:
+  nginx:
+    container_name: php_app_nginx_qa
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8086:80"
+    networks:
+      - app-network
+    volumes:
+      - ./app/:/var/www/html/
+  php:
+    platform: linux/amd64
+    container_name: php_app_php_qa
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - app-network
+    volumes:
+      - ./app/:/var/www/html/
+    environment:
+      TZ: UTC
+      PUID: ${UID:-9999}
+      PGID: ${GID:-9999}
+      ROOT_PATH: /var/www/html
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_db_mes
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1437:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    platform: linux/amd64 # Required for Apple Silicon
+    networks:
+      - app-network
+
+volumes:
+  mssql-data:
+
+networks:
+  app-network:
+    driver: bridge

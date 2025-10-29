@@ -1,1 +1,5 @@
-# kfc_qa_api
+#kossan qa
+
+db name: qa
+
+docker compose up -d
