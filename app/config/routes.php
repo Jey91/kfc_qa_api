@@ -56,14 +56,7 @@ $router->group(['prefix' => $v1BasePath], function ($router) {
      * 
      * Routes for user authentication.
      */
-    // $router->group(['prefix' => 'auth'], function ($router) {
-    //     $router->post('/register', 'AuthController@register');
-    //     $router->post('/login', 'AuthController@login');
-    //     $router->post('/logout', 'AuthController@logout');
-    //     // $router->get('/me', 'AuthController@me');
-    //     $router->post('/refresh', 'AuthController@refreshToken');
-    // });
-
+  
     $router->group(['prefix' => 'auth'], function ($router) {
         $router->post('/login', 'UserController@login')->withMiddleware(['log']);
         $router->post('/logout', 'UserController@logout')->withMiddleware(['log']);

@@ -1,7 +1,7 @@
 <?php
 $serverName = "db"; // SQL Server container name
 $connectionOptions = array(
-    "Database" => "mes",
+    "Database" => "qa",
     "Uid" => "sa",
     "PWD" => "YourStrong@Passw0rd",
     "TrustServerCertificate" => "yes" // Add this to bypass SSL verification

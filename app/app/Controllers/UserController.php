@@ -42,7 +42,7 @@ class UserController
             'username' => $request->getData('username'),
             'password' => $request->getData('password'),
             'platform' => $this->administration->returnPlatform(),
-            'fromPlatform' => 'mes'
+            'fromPlatform' => 'qa'
         ];
         
         //go admin api to check

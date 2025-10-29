@@ -44,7 +44,7 @@ return [
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => 'db',
-            'port' => '1437',
+            'port' => '1433',
             'database' => 'qa',
             'username' => 'sa',
             'password' => 'YourStrong@Passw0rd',
