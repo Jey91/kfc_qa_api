@@ -26,7 +26,7 @@ class SystemLogHistoryController
         // Validate authurization
         $authInfo = $request->getData('user');
 
-        if (!$authInfo['user_access']['mes_system_log']['read']) {
+        if (!$authInfo['user_access']['qa_system_log']['read']) {
             return $response->unauthorized('Permission denied');
         }
 
