@@ -103,16 +103,6 @@ $router->group(['prefix' => $v1BasePath], function ($router) {
         $router->post('/get-user-profile', 'PlatformController@getBasicProfile')->withMiddleware(['basic']);
     });
 
-   
-    /**
-     * Notification Routes
-     */
-    $router->group(['prefix' => 'notification'], function ($router) {
-        $router->post('/get-by-code', 'NotificationController@getNotification')->withMiddleware(['auth']);
-        $router->post('/list', 'NotificationController@getAllNotification')->withMiddleware(['auth']);
-        $router->post('/get-unread-count', 'NotificationController@getNotificationCount')->withMiddleware(['auth']);
-    });
-
     /**
      * system log Routes
      */
