@@ -242,4 +242,25 @@ class PlatformController
             "User platform list found"
         );
     }
+
+    public function getWarehouseListToSelect(Request $request, Response $response)
+    {   
+        $credentials = [
+            'accessUsername' => $request->getData('accessUsername'),
+            'publicAccessKey' => $request->getData('publicAccessKey'),
+        ];
+        //get admin api from Administration model
+        $apiResult = $this->administration->warehouseListToSelect($credentials);
+        $result = null;
+        if ($apiResult['status_code']=='200') {
+            $result = $apiResult['data'];
+        } else {
+           // Handle error
+           return $response->error($apiResult['message'], $apiResult['status_code']);
+        }
+        return $response->success(
+            $result,
+            "Warehouse list retrieved successfully"
+        );
+    }
 }

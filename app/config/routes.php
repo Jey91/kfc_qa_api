@@ -94,6 +94,13 @@ $router->group(['prefix' => $v1BasePath], function ($router) {
     });
 
     /**
+     * WMS Warehouse Routes
+     */
+    $router->group(['prefix' => 'warehouse'], function ($router) {
+        $router->post('/all-warehouse-list-to-select', 'PlatformController@getWarehouseListToSelect');
+    });
+
+    /**
      * User Routes
      */
     $router->group(['prefix' => 'user'], function ($router) {

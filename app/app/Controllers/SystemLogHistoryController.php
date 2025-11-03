@@ -25,6 +25,20 @@ class SystemLogHistoryController
     {
         // Validate authurization
         $authInfo = $request->getData('user');
+        
+        // //for testing how to get data from wms
+        // $credentials = [
+        //     'accessUsername' => $request->getData('accessUsername'),
+        //     'publicAccessKey' => $authInfo['public_access_key'],
+        //     'itemIdList' => "[1]"
+        // ];
+        // $apiResult = $this->administration->itemInfoByIdList($credentials);
+        // $result = null;
+        // if ($apiResult['status_code']=='200') {
+        //     $result = $apiResult['data'];
+        //      print_r($result);
+        // }
+        // // //end
 
         if (!$authInfo['user_access']['qa_system_log']['read']) {
             return $response->unauthorized('Permission denied');

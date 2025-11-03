@@ -50,6 +50,49 @@ class Administration
         return json_decode($response, true); 
        
     }
+    function wmsAPI(string $endpoint, array $payload): array
+    {
+        $url = $this->config['wms_api_url'] . $endpoint;
+
+        $postFields = http_build_query($payload);
+
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $postFields,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/x-www-form-urlencoded'
+            ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
+        ]);
+
+        $response = curl_exec($curl);
+
+        if (curl_errno($curl)) {
+            // handle error
+            curl_close($curl);
+            return false;
+        }
+
+        curl_close($curl);
+        return json_decode($response, true); 
+       
+    }
+    function warehouseListToSelect($credentials)
+    {   
+       // Get from wms controller
+        $apiResult = $this->wmsAPI('/api/v1/warehouse/all-warehouse-list-to-select', $credentials);
+        return $apiResult;
+    }
+    function itemInfoByIdList($credentials)
+    {   
+       // Get from wms controller
+        $apiResult = $this->wmsAPI('/api/v1/item-external/item-info-by-id-list', $credentials);
+        return $apiResult;
+    }
     function plantListToSelect($credentials)
     {   
        // Get from admin controller

@@ -36,6 +36,9 @@ return [
     // administration url
     'administration_url' => 'http://host.docker.internal:8082', //https://kpcs.kossan.com.my/admin_controller
 
+    // WMS API URL
+    'wms_api_url' => 'http://host.docker.internal:8084', //https://kpcs.kossan.com.my/wms_controller
+    
     // Encryption key
     'key' => 'your-secret-key',
 
