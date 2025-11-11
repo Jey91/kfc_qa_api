@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use Core\Request;
 use Core\Response;
+use Core\Context;
+use Core\Database;
 use App\Models\UserLogin;
 use App\Models\Administration;
 use Utils\Helper;
@@ -45,6 +47,8 @@ class UserController
             'fromPlatform' => 'qa'
         ];
         
+        $username = $request->getData('username');
+
         //go admin api to check
         $apiResult = $this->administration->verifyAccount($credentials);
        
@@ -53,9 +57,20 @@ class UserController
         if ($apiResult['status_code']=='200') {
             $userData = $apiResult['data'];
 
+            //get first of entity connection name
+            $entityConnectionName = "";
+            if ($userData['entity_access']){
+                $entityConnectionName = $userData['entity_access'][0]['connection_name'];
+            }
+            \Core\Context::setActiveConnection($username, $entityConnectionName);
+            $activeConn = Context::getActiveConnection($username);
+
+            if (!empty($activeConn)) {
+                Database::selectConnection($activeConn);
+            }
             // // Generate a new access token
             // $accessToken = $this->helper->generateToken(50);
-
+            
             // Get from api
             $accessToken = $userData['access_token'];
             $userDbCode = $userData['db_code'];
@@ -131,6 +146,19 @@ class UserController
         
         if ($apiResult['status_code']=='200') {
             $userData = $apiResult['data'];
+            $username = $userData['username'];
+            //get first of entity connection name
+            $entityConnectionName = "";
+            if ($userData['entity_access']){
+                $entityConnectionName = $userData['entity_access'][0]['connection_name'];
+            }
+            \Core\Context::setActiveConnection($username, $entityConnectionName);
+            $activeConn = Context::getActiveConnection($username);
+
+            if (!empty($activeConn)) {
+                Database::selectConnection($activeConn);
+            }
+
             // Get from api
             $accessToken = $userData['access_token'];
             $userDbCode = $userData['db_code'];
@@ -202,7 +230,75 @@ class UserController
             "The platform access token was generated successfully."
         );
     }
+    /**
+     * Update User Entity 
+     */
+    public function updateUserEntity(Request $request, Response $response)
+    {
 
+        $userData =$request->getData('user');
+        
+        // Validate request data
+        $errors = $request->validate([
+            'entityConnectionName' => ['required']
+        ]);
+
+        if (!empty($errors)) {
+            return $response->validationError($errors);
+        }
+       
+        $username = $request->getData('accessUsername');
+        $entityConnectionName = $request->getData('entityConnectionName');
+
+        \Core\Context::setActiveConnection($username, $entityConnectionName);
+
+        $activeConn = Context::getActiveConnection($username);
+        if (!empty($activeConn)) {
+            Database::selectConnection($activeConn);
+        }
+        
+        // update user login 
+        $accessToken = $request->getData('accessToken');
+        $userDbCode = $userData['lu_db_code'];
+        $platformLoginDbCode = $userData['pl_db_code'];
+        
+        
+        // find existing record and update
+        $findByRecord= $this->userLogin->findByRecord($userDbCode);
+        
+        if ($findByRecord) {
+            //$newAccessToken = $this->helper->generateToken(50);
+            // Prepare update data
+            $updateData = [
+                'ul_pl_db_code' => $platformLoginDbCode,
+                'ul_access_token' => $accessToken,
+                'ul_last_login' => date('Y-m-d H:i:s')
+            ];
+            // Perform update
+            $updateUserLoginSuccess = $this->userLogin->update($findByRecord['ul_id'], $updateData);
+
+            if (!$updateUserLoginSuccess) {
+                return $response->error('Failed to update record', 500);
+            }
+        }else{
+            // If record does not exist then create
+            // Prepare data for creation
+            $data = [
+                'ul_pl_db_code' => $platformLoginDbCode,
+                'ul_lu_db_code' => $userDbCode,
+                'ul_access_token'=> $accessToken,
+                'ul_last_login' => date('Y-m-d H:i:s')
+            ];
+            // insert record
+            $insertUserLogin = $this->userLogin->create($data);
+            
+            if (!$insertUserLogin) {
+                return $response->error('Failed to create record', 401);
+            }
+        }
+
+        return $response->success(null, 'Update user entity successful');
+    }
     /**
      * Deauthenticate a user
      */
@@ -240,6 +336,9 @@ class UserController
 
         // End of condition
         // /////////////////
+
+        // If you want, also reset DB connection to default
+        \Core\Database::reloadDefault();
 
         return $response->success(null, 'Logout successful');
     }

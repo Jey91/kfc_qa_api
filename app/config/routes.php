@@ -107,7 +107,10 @@ $router->group(['prefix' => $v1BasePath], function ($router) {
         $router->post('/get-platform-list', 'PlatformController@getPlatformList')->withMiddleware(['basic']);
         $router->post('/user-list-to-select', 'PlatformController@getUserListToSelect')->withMiddleware(['basic']);
         $router->post('/get-user-plant-list', 'PlatformController@getUserPlantList')->withMiddleware(['basic']);
+        $router->post('/get-user-warehouse-list', 'PlatformController@getUserWarehouseList')->withMiddleware(['basic']);
+        $router->post('/get-user-entity-list', 'PlatformController@getUserEntityList')->withMiddleware(['basic']);
         $router->post('/get-user-profile', 'PlatformController@getBasicProfile')->withMiddleware(['basic']);
+        $router->post('/update-user-entity', 'UserController@updateUserEntity')->withMiddleware(['basic']);
     });
 
     /**

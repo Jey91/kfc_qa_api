@@ -210,6 +210,54 @@ class PlatformController
             "User Plant List found"
         );
     }
+    public function getUserWarehouseList(Request $request, Response $response)
+    {   
+        $credentials = [
+            'accessUsername' => $request->getData('accessUsername'),
+            'accessToken' => $request->getData('accessToken'),
+            'entityDbCode' => $request->getData('entityDbCode')
+        ];
+        
+        //get from admin controller
+        $apiResult = $this->administration->userWarehouseList($credentials);
+
+        $result = null;
+        if ($apiResult['status_code']=='200') {
+            $result = $apiResult['data'];
+        } else {
+           // Handle error
+           return $response->error($apiResult['message'], $apiResult['status_code']);
+        }
+        return $response->success(
+            $result,
+            "User Warehouse List found"
+        );
+    }
+
+    public function getUserEntityList(Request $request, Response $response)
+    {
+        $credentials = [
+            'accessUsername' => $request->getData('accessUsername'),
+            'accessToken' => $request->getData('accessToken'),
+            'entityDbCode' => $request->getData('entityDbCode')
+        ];
+
+        //get from admin controller
+        $apiResult = $this->administration->userEntityList($credentials);
+
+        $result = null;
+        if ($apiResult['status_code']=='200') {
+            $result = $apiResult['data'];
+        } else {
+           // Handle error
+           return $response->error($apiResult['message'], $apiResult['status_code']);
+        }
+        return $response->success(
+            $result,
+            "User Entity List found"
+        );
+    }
+    
     public function getPlatformList(Request $request, Response $response)
     {
         // Validate current platform type

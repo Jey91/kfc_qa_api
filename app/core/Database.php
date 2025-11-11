@@ -59,6 +59,44 @@ class Database
 
         return self::$instance;
     }
+    
+    public static function reset(): void
+    {
+        if (self::$instance !== null) {
+            self::$instance->close();   // you already have close()
+            self::$instance = null;
+        }
+    }
+
+    /** Reload using the current config file's 'default' connection */
+    public static function reloadDefault(): void
+    {
+        self::reset();
+        self::getInstance();  // this will call loadDefaultConfig() then connect()
+    }
+
+    /** Select a connection by name now (without editing the file) */
+
+    public static function selectConnection(string $name): void
+    {
+        $configFile = dirname(__DIR__) . '/config/database.php';
+        $cfg = require $configFile;
+
+        if (!isset($cfg['connections'][$name])) {
+            throw new \InvalidArgumentException("Unknown DB connection: {$name}");
+        }
+
+        $newConfig = $cfg['connections'][$name];
+
+        if (self::$instance === null) {
+            // First use: create with target config
+            self::$instance = new self($newConfig);
+        } else {
+            // IMPORTANT: keep the same object; reconfigure + reconnect
+            self::$instance->configure($newConfig);
+        }
+    }
+
 
     /**
      * Constructor
@@ -88,11 +126,11 @@ class Database
     {
         $this->config = $config;
 
-        // Reconnect if already connected
-        if ($this->pdo !== null) {
-            $this->connect();
-        }
+        // 切库前把旧的 statement 置空，避免用旧连接的句柄
+        $this->statement = null;
 
+        // 无论是否已有 PDO，都直接重连；确保换库成功
+        $this->connect();
         return $this;
     }
 
@@ -137,6 +175,7 @@ class Database
      */
     private function connect()
     {
+        $this->statement = null;
         // Build DSN
         $dsn = $this->buildDsn();
 
@@ -220,6 +259,9 @@ class Database
      */
     public function prepare($sql)
     {
+        if ($this->pdo === null) {
+            $this->connect();
+        }
         $this->statement = $this->pdo->prepare($sql);
         return $this;
     }

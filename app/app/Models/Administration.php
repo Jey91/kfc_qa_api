@@ -141,10 +141,28 @@ class Administration
         $apiResult = $this->adminAPI('/api/v1/user/get-user-plant-list', $credentials);
         return $apiResult;
     }
+    function userWarehouseList($credentials)
+    {   
+       // Get from admin controller
+        $apiResult = $this->adminAPI('/api/v1/user/get-user-warehouse-list', $credentials);
+        return $apiResult;
+    }
+    function userEntityList($credentials)
+    {   
+       // Get from admin controller
+        $apiResult = $this->adminAPI('/api/v1/user/get-user-entity-list', $credentials);
+        return $apiResult;
+    }
     function verifyAccount($credentials)
     {   
        // Get from admin controller
         $apiResult = $this->adminAPI('/api/v1/account/verify', $credentials);
+        return $apiResult;
+    }
+    function verifyPublicAccessKey($credentials)
+    {   
+       // Get from admin controller
+        $apiResult = $this->adminAPI('/api/v1/account/verify-public-access-key', $credentials);
         return $apiResult;
     }
     function authCheck($credentials)

@@ -4,6 +4,8 @@ namespace App\Middleware;
 
 use Core\Request;
 use Core\Response;
+use Core\Context;
+use Core\Database;
 use App\Models\Administration;
 use App\Models\UserLogin;
 
@@ -24,6 +26,13 @@ class AuthMiddleware
         $username = $request->getData('accessUsername');
         $plantCode = $request->getData('globalPlantDbCode');
 
+        if (!empty($username)) {
+            $activeConn = Context::getActiveConnection($username);
+            if (!empty($activeConn)) {
+                Database::selectConnection($activeConn);
+            }
+        }
+        
         if (empty($token) || empty($username)) {
             return $response->unauthorized('Authentication required');
         }
